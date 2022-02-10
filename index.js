@@ -83,8 +83,12 @@ async function generateSignedUrl(filepath) {
 async function fileSearch(url_parse) {
   let path_name = url_parse.pathname;
 
+  if (path_name.slice(0, 1) === "/") {
+    path_name = path_name.slice(1); // remove prefix '/'
+  }
+
   if (path_name.slice(-1) === "/") {
-    path_name = path_name.slice(0, -1); // remove '/'
+    path_name = path_name.slice(0, -1); // remove suffix '/'
   }
 
   let is_file = false; //file find flg
@@ -105,10 +109,10 @@ async function fileSearch(url_parse) {
     if (is_file === false) {
       //defalut html not found
 
-      if (await checkFileExists(`/${NOT_FOUND_HTML}`)) {
+      if (await checkFileExists(`${NOT_FOUND_HTML}`)) {
         // check 404 html
         is_file = true;
-        path_name = `/${NOT_FOUND_HTML}`;
+        path_name = `${NOT_FOUND_HTML}`;
       } else {
         return [FILE_NOT_FOUND, ""];
       }
